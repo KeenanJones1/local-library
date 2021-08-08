@@ -1,10 +1,24 @@
+const { listenerCount } = require('../models/book');
 var Book = require('../models/book');
+var mongoose = require('mongoose');
 
-exports.index = function(req, res) {
-    const query = Book.find()
-    // res.send(query)
-    res.render('index', {title: "Hey"})
+
+// make sure there is sample data in the database 
+
+exports.index = async function(req, res) {
+    try{
+        const books = await Book.find();
+        res.json(books);
+    }
+    catch(err){
+        res.json({message: err});
+    }
+
+    // let books = Book.find()
+    // console.log(books.query);
+    // res.render('index', {title: "Hey"});
 };
+
 
 // Display list of all books.
 exports.book_list = function(req, res) {

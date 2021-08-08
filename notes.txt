@@ -39,3 +39,9 @@ exports.author_update_get = function(req, res) {
 exports.author_update_post = function(req, res) {
     res.send('NOT IMPLEMENTED: Author update POST');
 };
+
+Node and Express Intro
+Node is an open-source, cross-platform runtime environment that allows developers to create all kinds of server-side tools and applications in JavaScript.
+
+Express is the most popular Node web framework, and is the underlying library for a number of other popular Node web frameworks
+- Write handlers for requests with different HTTP verbs at different URL paths (routes).
