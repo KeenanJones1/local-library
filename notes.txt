@@ -45,3 +45,22 @@ Node is an open-source, cross-platform runtime environment that allows developer
 
 Express is the most popular Node web framework, and is the underlying library for a number of other popular Node web frameworks
 - Write handlers for requests with different HTTP verbs at different URL paths (routes).
+
+
+extends layout
+
+block content
+  h1= title
+
+  ul
+    - book_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+    each book in book_list
+      li
+        a(href=book.url) #{book.title}
+        |  (#{book.author.name})
+
+    else
+      li There are no books.
+
+
+       res.render('book_list', { title: 'Book List', book_list: list_books });
