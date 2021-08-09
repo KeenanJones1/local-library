@@ -127,13 +127,13 @@ exports.genre_delete_post = function(req, res, next) {
   },
   function(err, results){
     if(err) return next(err);
-    if(results.genres_books.length > 0){
-      res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, genres_books: results.genres_books});
+    if(results.genre_books.length > 0){
+      res.render('genre_delete', {title: 'Delete Genre', genre: results.genre, genres_books: results.genre_books});
       return;
     }
     else{
       Genre.findByIdAndRemove(req.body.genreid, function deleteGenre(err){
-        if(err) return next(err);
+        if(err) { return next(err); }
         res.redirect('/catalog/genres')
       });
     };
@@ -142,10 +142,43 @@ exports.genre_delete_post = function(req, res, next) {
 
 // Display Genre update form on GET.
 exports.genre_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre update GET');
+  async.parallel({
+    genre: function(callback){
+      Genre.findById(req.params.id).populate('genre').exec(callback);
+    },
+  },
+    function(err, results){
+      if(err){return next(err)};
+      if(results.genre==null){
+        const err = new Error('Book not found');
+        err.status = 404;
+        return next(err);
+      }
+      res.render('genre_form', {
+        title: 'Update Genre',
+        genre: results.genre
+      })
+    });
 };
 
 // Handle Genre update on POST.
-exports.genre_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre update POST');
-};
+exports.genre_update_post = [
+  body('name', 'Name must not be empty.').trim().isLength({min: 1}).escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const genre = new Genre({
+      name: req.body.name,
+      _id: req.params.id
+    });
+
+    if(!errors.isEmpty()){
+      res.render('genre_form', {title: 'Update Book', genre: genre, errors: errors.array()});
+      return;
+    }else{
+      Genre.findByIdAndUpdate(req.params.id, genre, {}, function(err, thegenre){
+        if(err){return next(err);}
+        res.redirect(thegenre.url);
+      });
+    }
+  }
+];
