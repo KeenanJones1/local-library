@@ -53,7 +53,9 @@ app.use(function(err, req, res, next) {
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-const mongoDB = process.env.DB_CONNECTION
+const mongoDB = process.env.DB_CONNECTION1
+
+
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //Get the default connection
