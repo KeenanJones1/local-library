@@ -53,10 +53,16 @@ app.use(function(err, req, res, next) {
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-const mongoDB = process.env.DB_CONNECTION1
+const mongoDB = process.env.DB_CONNECTION
+
+setTimeout(async function() {
+  try {
+   await mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+  } catch (error) {
+   console.log('Error connecting - retrying in 30 seconds')
+ }}, 30000);
 
 
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //Get the default connection
 var db = mongoose.connection;
